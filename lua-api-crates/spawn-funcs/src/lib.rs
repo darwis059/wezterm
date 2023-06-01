@@ -35,6 +35,10 @@ async fn run_child_process<'lua>(
         cmd.args(&args[1..]);
     }
 
+    for (k, v) in config::configuration().set_environment_variables.iter() {
+        cmd.env(k, v);
+    }
+
     #[cfg(windows)]
     {
         use smol::process::windows::CommandExt;
@@ -55,6 +59,10 @@ async fn background_child_process<'lua>(_: &'lua Lua, args: Vec<String>) -> mlua
 
     if args.len() > 1 {
         cmd.args(&args[1..]);
+    }
+
+    for (k, v) in config::configuration().set_environment_variables.iter() {
+        cmd.env(k, v);
     }
 
     #[cfg(windows)]
